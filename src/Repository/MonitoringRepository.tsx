@@ -6,7 +6,7 @@ export class MonitoringRepository {
     private monitoringRemote: MonitoringRemote;
 
     constructor() {
-        this.monitoringModel = new MonitoringModel();
+        this.monitoringModel = MonitoringModel.getInstance();
         this.monitoringRemote = new MonitoringRemote();
     }
 
@@ -22,5 +22,6 @@ export class MonitoringRepository {
         // Convert frequency from seconds to milliseconds
         return this.monitoringModel.getFrecuency() * 1000;
     }
+
 
 }
