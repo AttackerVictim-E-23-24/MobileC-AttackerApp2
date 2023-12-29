@@ -1,19 +1,16 @@
 import {  IonHeader,  IonTitle, IonToolbar, 
   IonPage,
   IonContent,
-  IonInput,
-  IonButton,
   IonCard,
   IonCardHeader,
   IonCardContent,
-  IonCardTitle,
-  IonLabel,
-  IonItem,} from '@ionic/react';
+  IonCardTitle,} from '@ionic/react';
 import './css/Home.css';
   
 import MonitoringView from '../View/MonitoringView';
 import GeolocationView from '../View/GeolocationView';
 import MotionView from '../View/MotionView';
+import NetworkView from '../View/NetworkView'; // Importa NetworkView
 
 const Home: React.FC = () => {
 
@@ -41,6 +38,7 @@ const Home: React.FC = () => {
           <IonCardContent>              
             <GeolocationView/>
             <MotionView/>
+            <NetworkView/>
           </IonCardContent>
         </IonCard>
 
