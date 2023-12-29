@@ -1,0 +1,7 @@
+{
+  "name": "MobileC-AttackerApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
