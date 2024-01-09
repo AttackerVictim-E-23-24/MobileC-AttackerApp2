@@ -7,10 +7,10 @@ export class MonitoringModel {
     private minDistance: number;
   
     private constructor() {
-      this.frecuency = 30;
-      this.inactivityTime = 90;
-      this.offlineTime = 90;
-      this.minDistance = 100;
+      this.frecuency = 120;
+      this.inactivityTime = 280;
+      this.offlineTime = 280;
+      this.minDistance = 6;
     }
   
     public static getInstance(): MonitoringModel {

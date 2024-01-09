@@ -12,6 +12,7 @@ export class MonitoringRepository {
 
     async fetchMonitoringData(username: string) {
         const data = await this.monitoringRemote.getMonitoringData(username);
+        console.log("datos de la peticion:",data);
         this.monitoringModel.setFrecuency(data.frecuency);
         this.monitoringModel.setInactivityTime(data.inactivityTime);
         this.monitoringModel.setOfflineTime(data.offlineTime);
