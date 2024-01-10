@@ -19,13 +19,17 @@ export class GeolocationRepository{
         this.geolocationModel.setTimestamp(new Date(coordinates.timestamp));
     }
 
-    async sendData(): Promise<void> {
+    async sendData(): Promise<any> {
         // Enviar los datos a GeolocationRemote
-        this.geolocationRemote.sendData(
-            this.geolocationModel.getLatitude(),
-            this.geolocationModel.getLongitude(),
-            this.geolocationModel.getAccuracy(),
-            this.geolocationModel.getTimestamp()
-        );
+        console.log(this.geolocationModel.getLatitude());
+        const response = await this.geolocationRemote.sendData([
+            {
+                latitude: this.geolocationModel.getLatitude(),
+                longitude: this.geolocationModel.getLongitude(),
+                currentTime: this.geolocationModel.getTimestamp().toISOString()
+            }
+        ]);
+
+        return response;
     }
 }
