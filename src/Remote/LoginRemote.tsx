@@ -4,9 +4,10 @@ import { BaseURL } from "./BaseURL";
 export class LoginRemote {
   public async requestLogin(username: string, password: string) {
 
+    console.log(username, password);
     try {
       const response = await axios.get(
-        `${BaseURL.baseUrl}/users/authUser/${username}/${password}/3`,
+        `${BaseURL.baseUrl}/users/authUser/${username}/${password}`,
         { timeout: 5000 }
       );
 

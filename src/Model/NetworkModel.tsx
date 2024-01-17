@@ -1,10 +1,18 @@
 export class NetworkModel {
+    private static instance: NetworkModel;
     private status: boolean;
-    private timestamp: Date|false;
+    private timestamp: Date;
 
-    constructor() {
+    private constructor() {
         this.status = false;
-        this.timestamp = false;
+        this.timestamp = new Date();
+    }
+
+    static getInstance(): NetworkModel {
+        if (!NetworkModel.instance) {
+            NetworkModel.instance = new NetworkModel();
+        }
+        return NetworkModel.instance;
     }
 
     getStatus() {

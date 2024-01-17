@@ -10,15 +10,16 @@ export class MonitoringRemote {
         if (this.dataLoaded) {
             throw new Error('Data already loaded');
         }
-        const response = await axios.post(`${""}/monitoring`, { username });
-
+        const response = await axios.get(`${BaseURL.baseUrl}/monitoreo/getMonitoreo/${username}`, { timeout: 5000 });
+    
         this.dataLoaded = true;
-        
+        console.log(response.data);
+
         return {
-            frecuency: response.data.frecuency,
-            inactivityTime: response.data.inactivityTime,
-            offlineTime: response.data.offlineTime,
-            minDistance: response.data.minDistance
+            frecuency: response.data.frecuencia,
+            inactivityTime: response.data.tiempoInactividad,
+            offlineTime: response.data.tiempoOffline,
+            minDistance: response.data.distanciaAlejamiento
         };
     }
 }

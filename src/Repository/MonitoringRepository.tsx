@@ -6,12 +6,13 @@ export class MonitoringRepository {
     private monitoringRemote: MonitoringRemote;
 
     constructor() {
-        this.monitoringModel = new MonitoringModel();
+        this.monitoringModel = MonitoringModel.getInstance();
         this.monitoringRemote = new MonitoringRemote();
     }
 
     async fetchMonitoringData(username: string) {
         const data = await this.monitoringRemote.getMonitoringData(username);
+        console.log("datos de la peticion:",data);
         this.monitoringModel.setFrecuency(data.frecuency);
         this.monitoringModel.setInactivityTime(data.inactivityTime);
         this.monitoringModel.setOfflineTime(data.offlineTime);
@@ -22,5 +23,6 @@ export class MonitoringRepository {
         // Convert frequency from seconds to milliseconds
         return this.monitoringModel.getFrecuency() * 1000;
     }
+
 
 }
