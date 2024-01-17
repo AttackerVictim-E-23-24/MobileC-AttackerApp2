@@ -8,7 +8,7 @@ export class MotionRemote {
 
         const movimientoData = [
             {
-              isMoving: isMoving,
+              movimiento: isMoving,
               fecha: timeStamp
             }
           ];
