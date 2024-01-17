@@ -3,17 +3,10 @@ import { BaseURL } from './BaseURL';
 import { LoginModel } from '../Model/LoginModel';
 
 export class MotionRemote {
-    public async sendMotion(isMoving: boolean, timeStamp: Date) {
+    public async sendMotion(movimientoData: { movimiento: boolean, fecha: Date }[]) {
         const username = LoginModel.getInstance().getUsername();
 
-        const movimientoData = [
-            {
-              movimiento: isMoving,
-              fecha: timeStamp
-            }
-          ];
-          
-            console.log("movimientoData", movimientoData);
+        console.log("movimientoData", movimientoData);
         try {
             const response = await fetch(`${BaseURL.baseUrl}/users/setMovimiento/${username}`, {
                 method: 'post',

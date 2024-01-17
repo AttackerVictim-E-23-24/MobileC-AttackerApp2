@@ -22,7 +22,7 @@ const useMotionViewModel = () => {
     startListening();
     const frequency = monitoringModel.getFrecuency() * 1000; // Convert frequency from seconds to milliseconds
     const intervalId = setInterval(() => {
-      motionRepository.sendData(isMoving, new Date());
+      motionRepository.sendData({ movimiento: isMoving, fecha: new Date() }); // Pass network status as save parameter
     }, frequency );
 
     return () => {
