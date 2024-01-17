@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { GeolocationRepository } from '../Repository/GeolocationRepository';
-import { GeolocationModel } from '../Model/GeolocationModel';
-import { MonitoringRepository } from '../Repository/MonitoringRepository';
+import { useState, useEffect } from "react";
+import { GeolocationRepository } from "../Repository/GeolocationRepository";
+import { GeolocationModel } from "../Model/GeolocationModel";
+import { MonitoringRepository } from "../Repository/MonitoringRepository";
+import { GeolocationLocal } from "../Local/GeolocationLocal"; // Import the GeolocationLocal class
 
 const useGeolocationViewModel = () => {
   const [latitude, setLatitude] = useState<string | null>(null);
@@ -11,7 +12,11 @@ const useGeolocationViewModel = () => {
   const geolocationModel = new GeolocationModel();
   const geolocationRepository = new GeolocationRepository(geolocationModel);
   const monitoringRepository = new MonitoringRepository();
-
+  const geolocationLocal = new GeolocationLocal(); // Create an instance of GeolocationLocal
+  // Add a useEffect that runs once when the component mounts
+  useEffect(() => {
+    //geolocationLocal.clearGeolocation();
+  }, []);
   useEffect(() => {
     const fetchGeolocation = async () => {
       await geolocationRepository.setCurrentPosition();
@@ -24,8 +29,8 @@ const useGeolocationViewModel = () => {
 
     const frequency = monitoringRepository.getFrecuency();
     const intervalId = setInterval(() => {
-        geolocationRepository.sendData();
-    }, frequency ); // Convert frequency from seconds to milliseconds
+      geolocationRepository.sendData();
+    }, frequency); // Convert frequency from seconds to milliseconds
 
     return () => clearInterval(intervalId);
   }, [geolocationRepository, geolocationModel, monitoringRepository]);

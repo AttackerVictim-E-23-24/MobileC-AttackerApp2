@@ -23,7 +23,7 @@ export class GeolocationRemote {
         },
       }));
 
-      console.log(data);
+      console.log("geolocation data send",data);
       const response = await fetch(`${BaseURL.baseUrl}/users/setGeolocationUser`, {
         method: 'post',
         headers: {
@@ -37,7 +37,7 @@ export class GeolocationRemote {
       }
 
       const responseData = await response.json();
-      console.log(responseData);
+      console.log("responseData geolocation", responseData);
       return responseData;
     } catch (error) {
       if (axios.isAxiosError(error)) {
