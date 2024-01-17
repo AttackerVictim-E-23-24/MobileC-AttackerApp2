@@ -3,17 +3,10 @@ import { BaseURL } from './BaseURL';
 import { LoginModel } from '../Model/LoginModel';
 
 export class MotionRemote {
-    public async sendMotion(isMoving: boolean, timeStamp: Date) {
+    public async sendMotion(movimientoData: { movimiento: boolean, fecha: Date }[]) {
         const username = LoginModel.getInstance().getUsername();
 
-        const movimientoData = [
-            {
-              movimiento: isMoving,
-              fecha: timeStamp
-            }
-          ];
-          
-            console.log("movimientoData", movimientoData);
+        console.log("movimientoData send", movimientoData);
         try {
             const response = await fetch(`${BaseURL.baseUrl}/users/setMovimiento/${username}`, {
                 method: 'post',
@@ -23,7 +16,7 @@ export class MotionRemote {
                 body: JSON.stringify(movimientoData)
             });
 
-            console.log("response, ", response);
+            console.log("response motion, ", response);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
