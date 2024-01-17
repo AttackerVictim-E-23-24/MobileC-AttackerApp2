@@ -2,6 +2,7 @@ import { PluginListenerHandle } from '@capacitor/core';
 import { Motion } from '@capacitor/motion';
 import { MotionModel } from '../Model/MotionModel';
 import { MotionRemote } from '../Remote/MotionRemote';
+import { MotionLocal } from '../Local/MotionLocal';
 
 let rotationHandler: PluginListenerHandle;
 
@@ -39,7 +40,20 @@ export class MotionRepository {
         }
     }
     
-    sendData(isMoving: boolean, timestamp: Date) {
-        this.motionRemote.sendMotion(isMoving, timestamp);
+    async sendData(movimientoData: { movimiento: boolean, fecha: Date }) {
+        const motionLocal = new MotionLocal();
+    
+        // Save new data to local storage
+        motionLocal.saveMotion(movimientoData.movimiento, movimientoData.fecha);
+    
+        const storedMovimientoData = motionLocal.getMotion();
+    
+        // Send all data here.
+        const response = await this.motionRemote.sendMotion(storedMovimientoData);
+    
+        // If the data is sent successfully, clear it from local storage
+        if (response.respuesta) {
+            motionLocal.clearMotion();
+        }
     }
 }
