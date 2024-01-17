@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { MotionRepository } from '../Repository/MotionRepository';
 import { MonitoringModel } from '../Model/MonitoringModel';
+import { MotionLocal } from '../Local/MotionLocal'; // Import the MotionLocal class
 
 const useMotionViewModel = () => {
   const [isMoving, setIsMoving] = useState<boolean>(false);
   const [displayIsMoving, setDisplayIsMoving] = useState<boolean>(false);
   const motionRepository = new MotionRepository();
   const monitoringModel = MonitoringModel.getInstance();
+  const motionLocal = new MotionLocal(); // Create an instance of MotionLocal
 
   const startListening = () => {
     motionRepository.startListening((isMoving: boolean) => {
@@ -17,6 +19,11 @@ const useMotionViewModel = () => {
   const stopListening = () => {
     motionRepository.stopListening();
   };
+
+  // Add a useEffect that runs once when the component mounts
+  useEffect(() => {
+    //motionLocal.clearMotion();
+  }, []);
 
   useEffect(() => {
     startListening();

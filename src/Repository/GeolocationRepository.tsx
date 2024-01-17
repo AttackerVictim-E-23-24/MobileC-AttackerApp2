@@ -1,6 +1,7 @@
 import { Geolocation } from '@capacitor/geolocation';
 import { GeolocationModel } from '../Model/GeolocationModel';
 import { GeolocationRemote } from '../Remote/GeolocationRemote';
+import { GeolocationLocal } from '../Local/GeolocationLocal';
 
 export class GeolocationRepository{
     private geolocationModel: GeolocationModel;
@@ -20,16 +21,25 @@ export class GeolocationRepository{
     }
 
     async sendData(): Promise<any> {
-        // Enviar los datos a GeolocationRemote
-        console.log(this.geolocationModel.getLatitude());
-        const response = await this.geolocationRemote.sendData([
-            {
-                latitude: this.geolocationModel.getLatitude(),
-                longitude: this.geolocationModel.getLongitude(),
-                currentTime: this.geolocationModel.getTimestamp().toISOString()
-            }
-        ]);
-
+        const geolocationLocal = new GeolocationLocal();
+    
+        // Save new data to local storage
+        geolocationLocal.saveGeolocation(
+            this.geolocationModel.getLatitude(),
+            this.geolocationModel.getLongitude(),
+            this.geolocationModel.getTimestamp().toISOString()
+        );
+    
+        const storedLocationData = geolocationLocal.getGeolocation();
+    
+        // Send all data here.
+        const response = await this.geolocationRemote.sendData(storedLocationData);
+    
+        // If the data is sent successfully, clear it from local storage
+        if (response.resuesta) {
+            geolocationLocal.clearGeolocation();
+        }
+    
         return response;
     }
 }

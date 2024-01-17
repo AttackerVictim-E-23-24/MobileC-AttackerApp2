@@ -30,7 +30,7 @@ export class MotionLocal {
 
         try {
             const movimientoData = JSON.parse(localStorage.getItem(`motionData_${username}`) || '[]');
-            console.log("movimientoData", movimientoData);
+            console.log("movimientoData all", movimientoData);
             return movimientoData;
         } catch (error) {
             throw new Error('Error reading data from local storage');

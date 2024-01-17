@@ -6,7 +6,7 @@ export class MotionRemote {
     public async sendMotion(movimientoData: { movimiento: boolean, fecha: Date }[]) {
         const username = LoginModel.getInstance().getUsername();
 
-        console.log("movimientoData", movimientoData);
+        console.log("movimientoData send", movimientoData);
         try {
             const response = await fetch(`${BaseURL.baseUrl}/users/setMovimiento/${username}`, {
                 method: 'post',
@@ -16,7 +16,7 @@ export class MotionRemote {
                 body: JSON.stringify(movimientoData)
             });
 
-            console.log("response, ", response);
+            console.log("response motion, ", response);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
