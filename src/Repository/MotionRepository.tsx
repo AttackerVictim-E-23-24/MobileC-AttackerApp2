@@ -52,7 +52,7 @@ export class MotionRepository {
         const response = await this.motionRemote.sendMotion(storedMovimientoData);
     
         // If the data is sent successfully, clear it from local storage
-        if (response.respuesta) {
+        if (response) {
             motionLocal.clearMotion();
         }
     }
