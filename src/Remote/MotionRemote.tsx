@@ -22,7 +22,7 @@ export class MotionRemote {
             }
 
             const responseData = await response.json();
-            return responseData;
+            return true;
         } catch (error) {
             if ((error as Error).name === 'AbortError') {
                 throw { code: 'TIMEOUT_ERROR', message: 'La solicitud tardó demasiado tiempo, por favor verifica tu conexión a internet' };
