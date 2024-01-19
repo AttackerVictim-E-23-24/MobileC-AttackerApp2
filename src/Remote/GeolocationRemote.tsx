@@ -12,7 +12,6 @@ export class GeolocationRemote {
   ) {
     const username = LoginModel.getInstance().getUsername();
 
-
     try {
       const data = geolocationList.map((geo) => ({
         latitud: geo.latitude,
@@ -24,21 +23,21 @@ export class GeolocationRemote {
       }));
 
       console.log("geolocation data send",data);
-      const response = await fetch(`${BaseURL.baseUrl}/users/setGeolocationUser`, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-      
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
 
-      const responseData = await response.json();
-      console.log("responseData geolocation", responseData);
-      return responseData;
+      const response = await Promise.race([
+        fetch(`${BaseURL.baseUrl}/users/setGeolocationUser`, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        }),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Request timed out')), 2000)
+        )
+      ]);
+
+      return true;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.code === "ECONNABORTED") {
@@ -49,7 +48,7 @@ export class GeolocationRemote {
           };
         }
       }
-      throw new Error("Error de red o del servidor");
+      throw new Error("Error de red o del servidor"); 
     }
   }
 }

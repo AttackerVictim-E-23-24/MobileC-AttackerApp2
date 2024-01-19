@@ -20,14 +20,18 @@ export class GeolocationRepository{
         this.geolocationModel.setTimestamp(new Date(coordinates.timestamp));
     }
 
-    async sendData(): Promise<any> {
+    async sendData(
+        latitude: number,
+        longitude: number,
+        timestamp: Date
+    ): Promise<any> {
         const geolocationLocal = new GeolocationLocal();
     
         // Save new data to local storage
         geolocationLocal.saveGeolocation(
-            this.geolocationModel.getLatitude(),
-            this.geolocationModel.getLongitude(),
-            this.geolocationModel.getTimestamp().toISOString()
+            latitude,
+           longitude,
+            timestamp,
         );
     
         const storedLocationData = geolocationLocal.getGeolocation();
@@ -36,7 +40,7 @@ export class GeolocationRepository{
         const response = await this.geolocationRemote.sendData(storedLocationData);
     
         // If the data is sent successfully, clear it from local storage
-        if (response.resuesta) {
+        if (response) {
             geolocationLocal.clearGeolocation();
         }
     

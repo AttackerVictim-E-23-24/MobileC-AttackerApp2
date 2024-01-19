@@ -2,13 +2,13 @@ import { LoginModel } from '../Model/LoginModel';
 
 export class GeolocationLocal {
 
-    public saveGeolocation(latitude: number, longitude: number, currentTime: string) {
+    public saveGeolocation(latitude: number, longitude: number, currentTime: Date) {
         const username = LoginModel.getInstance().getUsername();
     
         const newGeolocationData = {
             latitude: latitude,
             longitude: longitude,
-            currentTime: currentTime
+            currentTime: null
         };
     
         try {
@@ -22,6 +22,13 @@ export class GeolocationLocal {
             localStorage.setItem(`geolocationData_${username}`, JSON.stringify(existingGeolocationData));
     
             console.log("geolocation data local", existingGeolocationData);
+    
+            // If there are 5 locations, send the data
+            if (existingGeolocationData.length === 5) {
+                // Call a method to send the data
+                // You will need to implement this method
+                this.clearGeolocation();
+            }
         } catch (error) {
             throw new Error('Error saving data to local storage');
         }

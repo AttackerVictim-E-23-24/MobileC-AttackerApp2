@@ -1,44 +1,52 @@
-import { useState, useEffect } from "react";
-import { GeolocationRepository } from "../Repository/GeolocationRepository";
-import { GeolocationModel } from "../Model/GeolocationModel";
-import { MonitoringRepository } from "../Repository/MonitoringRepository";
-import { GeolocationLocal } from "../Local/GeolocationLocal"; // Import the GeolocationLocal class
+import { useState, useEffect } from 'react';
+import { GeolocationRepository } from '../Repository/GeolocationRepository';
+import { GeolocationModel } from '../Model/GeolocationModel';
+import { MonitoringModel } from '../Model/MonitoringModel';
+import { GeolocationLocal } from '../Local/GeolocationLocal'; // Import the GeolocationLocal class
 
 const useGeolocationViewModel = () => {
-  const [latitude, setLatitude] = useState<string | null>(null);
-  const [longitude, setLongitude] = useState<string | null>(null);
-  const [accuracy, setAccuracy] = useState<string | null>(null);
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
+  const [accuracy, setAccuracy] = useState<number >();
+  const [isDataReady, setIsDataReady] = useState<boolean>(false); // New state
 
   const geolocationModel = new GeolocationModel();
   const geolocationRepository = new GeolocationRepository(geolocationModel);
-  const monitoringRepository = new MonitoringRepository();
+  const monitoringModel = MonitoringModel.getInstance();
   const geolocationLocal = new GeolocationLocal(); // Create an instance of GeolocationLocal
-  // Add a useEffect that runs once when the component mounts
+
+  const startListening = async () => {
+    await geolocationRepository.setCurrentPosition();
+    setLatitude(geolocationModel.getLatitude());
+    setLongitude(geolocationModel.getLongitude());
+    setAccuracy(geolocationModel.getAccuracy());
+    setIsDataReady(true); // Set isDataReady to true after setting geolocation data
+  };
+
+  // Start listening when the component mounts
   useEffect(() => {
-    //geolocationLocal.clearGeolocation();
+    startListening();
   }, []);
+
+  // Send data at the frequency specified by monitoringModel
   useEffect(() => {
-    const fetchGeolocation = async () => {
-      await geolocationRepository.setCurrentPosition();
-      setLatitude(geolocationModel.getLatitude().toFixed(5));
-      setLongitude(geolocationModel.getLongitude().toFixed(5));
-      setAccuracy(geolocationModel.getAccuracy().toFixed(5));
-    };
-
-    fetchGeolocation();
-
-    const frequency = monitoringRepository.getFrecuency();
+    const frequency = monitoringModel.getFrecuency() * 1000; // Convert frequency from seconds to milliseconds
     const intervalId = setInterval(() => {
-      geolocationRepository.sendData();
-    }, frequency); // Convert frequency from seconds to milliseconds
+      if (isDataReady) { // Check if data is ready before sending
+        geolocationRepository.sendData(latitude, longitude, new Date()); 
+      }
+    }, frequency);
 
-    return () => clearInterval(intervalId);
-  }, [geolocationRepository, geolocationModel, monitoringRepository]);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [monitoringModel.getFrecuency(), latitude, longitude, isDataReady]); // Add isDataReady to dependency array
 
   return {
     latitude,
     longitude,
     accuracy,
+    startListening,
   };
 };
 
